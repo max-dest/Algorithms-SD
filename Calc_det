@@ -3,36 +3,6 @@
 
 
 
-struct matrich typedef smt;
-
-
-smt * smt_make(int size);
-
-smt * smt_read(void);
-
-void smt_del(smt _smt);
-
-int smt_det_calc(smt _smt);
-
-void swap_lines(smt _smt, int * ln_1, int * ln_2);
-
-void multiply_line(smt _smt, int ln_num, double * k);
-
-void deduction_line(smt _smt, int * ln_1, int * ln_2, double * k);
-
-void help(void);
-
-
-
-int main(void) {
-    smt * _smt = smt_make(3);
-
-
-    return 0;
-}
-
-
-
 typedef struct matrich
 {
     int size;
@@ -40,16 +10,59 @@ typedef struct matrich
 }smt;
 
 
-smt * smt_make(int size) {
+smt * smt_make(int * size);
+
+smt * smt_read(void);
+
+void smt_del(smt * _smt);
+
+int smt_det_calc(smt * _smt);
+
+void swap_lines(smt * _smt, int * ln_1, int * ln_2);
+
+void multiply_line(smt * _smt, int * ln, double * k);
+
+void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k);
+
+void help(void);
+
+
+
+
+
+int main(void) {
+    smt * _smt = smt_read();
+    double x = 1, y = 2;
+    int q = 0, w = 1;
+
+    multiply_line(_smt, & q, & x);
+    deduction_line(_smt, & q, & w, & y);
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            printf("%lf ", _smt -> mt[i][j]);
+        }
+        printf("\n");
+    }
+
+    smt_del(_smt);
+
+    return 0;
+}
+
+
+
+
+
+smt * smt_make(int * size) {
     smt * _smt = (smt *) malloc(sizeof(smt));
     if (_smt == NULL) return NULL;
-    _smt -> size = size;
-    _smt -> mt = (double **) malloc(size * sizeof(double *));
-    if (_smt -> mt = NULL) free(_smt); return NULL;
+    _smt -> size = * size;
+    _smt -> mt = (double **) malloc(* size * sizeof(double *));
+    if (_smt -> mt == NULL) { free(_smt); return NULL; }
     int i = -1;
-    do { i++; _smt -> mt[i] = (double *) malloc(size * sizeof(double)); }
-    while (i < size && _smt -> mt[i] != NULL);
-    for (i = 0; i < size && _smt -> mt[i] == NULL; i++) 
+    do { i++; _smt -> mt[i] = (double *) malloc(* size * sizeof(double)); }
+    while (i < * size && _smt -> mt[i] != NULL);
+    for (i = 0; i < * size && _smt -> mt[i] == NULL; i++) 
     if (_smt -> mt[i] == NULL) {
         for (i--; i <= 0; i--) free(_smt -> mt[i]);
         free(_smt -> mt);
@@ -58,3 +71,53 @@ smt * smt_make(int size) {
 
     return _smt;
 }
+
+smt * smt_read(void) {
+    int size;
+    scanf("%d", & size);
+    smt * _smt = smt_make(& size);
+    if (_smt == NULL) return NULL;
+    for (int i = 0; i < size; i++)
+        for (int j = 0; j < size; j++) {
+            scanf("%lf", & (_smt -> mt[i][j]));
+        }
+
+    return _smt;
+}
+
+void smt_del(smt * _smt) {
+    for (int i = 0; i < _smt -> size; i++) free(_smt -> mt[i]);
+    free(_smt -> mt);
+    free(_smt);
+
+    return;
+}
+
+//int smt_det_calc(smt * _smt)
+//////////
+
+
+void swap_lines(smt * _smt, int * ln_1, int * ln_2) {
+    double * ln = _smt -> mt[* ln_1];
+    _smt -> mt[* ln_1] = _smt -> mt[* ln_2];
+    _smt -> mt[* ln_2] = ln;
+
+    return;
+}
+
+void multiply_line(smt * _smt, int * ln, double * k) {
+    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln][i] = * k;
+
+    return;
+}
+
+void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k) {
+    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln_2][i] -= * k * _smt -> mt[* ln_1][i];
+
+    return;
+}
+
+
+
+
+// void help(void);
