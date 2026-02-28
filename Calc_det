@@ -26,7 +26,7 @@ void swap_lines(smt * _smt, int * ln_1, int * ln_2);
 
 void multiply_line(smt * _smt, int * ln, double k);
 
-void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k);
+void deduction_line(smt * _smt, int * ln_1, int * ln_2, double k);
 
 int get_com(void);
 
@@ -125,15 +125,14 @@ double smt_det_calc(smt * _smt) {
     int j;
 
     for (int i = 0; i < _smt -> size; i++) {
-        j = 0;
-        while (_smt -> mt[j][0] == 0 && j < _smt -> size) j++;
-        if (_smt -> mt[j][0] == 0) return 0.0;
-        if (i != j) { det != -1.0; swap_lines(_smt, & i, & j); }
-        det /= _smt -> mt[i][0];
-        multiply_line(_smt, & i, 1 / _smt -> mt[i][0]);
-        for (j = i; j < _smt -> size; j++) deduction_line(_smt, & i, & j, & (_smt -> mt[j][0]));
+        j = i;
+        while (_smt -> mt[j][i] == 0 && j < _smt -> size) j++;
+        if (_smt -> mt[j][i] == 0) return 0.0;
+        if (i != j) { det *= -1.0; swap_lines(_smt, & i, & j); }
+        det *= _smt -> mt[i][i];
+        multiply_line(_smt, & i, 1.0 / _smt -> mt[i][i]);
+        for (j = i + 1; j < _smt -> size; j++) deduction_line(_smt, & i, & j, _smt -> mt[j][i]);
     }
-    det *= _smt -> mt[_smt -> size - 1][_smt -> size - 1];
 
     return det;
 }
@@ -149,14 +148,14 @@ void swap_lines(smt * _smt, int * ln_1, int * ln_2) {
 
 
 void multiply_line(smt * _smt, int * ln, double k) {
-    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln][i] = k;
+    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln][i] *= k;
 
     return;
 }
 
 
-void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k) {
-    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln_2][i] -= * k * _smt -> mt[* ln_1][i];
+void deduction_line(smt * _smt, int * ln_1, int * ln_2, double k) {
+    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln_2][i] -= k * _smt -> mt[* ln_1][i];
 
     return;
 }
@@ -164,7 +163,7 @@ void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k) {
 
 int get_com(void) {
     int count;
-    char str[10];
+    char str[5]; str[4] = '\n';
 
     char st_det[3] = "det";
     char st_help[4] = "help";
@@ -198,6 +197,7 @@ int get_com(void) {
                 count++;
     if (count == sizeof(st_end) / sizeof(char)) return 0;
 
+    //while (str[4] != '\n') scanf("%c", str[4]);
     return -1;
 }
 
