@@ -3,11 +3,11 @@
 
 
 
-typedef struct matrich
-{
-    int size;
-    double ** mt;
-}smt;
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////HEAD//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+typedef struct matrich smt;
 
 
 smt * smt_make(int * size);
@@ -16,42 +16,55 @@ smt * smt_read(void);
 
 void smt_del(smt * _smt);
 
-int smt_det_calc(smt * _smt);
+double smt_det_calc(smt * _smt);
 
 void swap_lines(smt * _smt, int * ln_1, int * ln_2);
 
-void multiply_line(smt * _smt, int * ln, double * k);
+void multiply_line(smt * _smt, int * ln, double k);
 
 void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k);
 
+int get_com(void);
+
 void help(void);
 
+void life_meaning(void);
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////MAIN//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 int main(void) {
-    smt * _smt = smt_read();
-    double x = 1, y = 2;
-    int q = 0, w = 1;
-
-    multiply_line(_smt, & q, & x);
-    deduction_line(_smt, & q, & w, & y);
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            printf("%lf ", _smt -> mt[i][j]);
+    int flag = 0;
+    do {
+        switch (get_com()) {
+            case 1:
+                
+                break;
+            case 9:
+                help();
+                break;
+            case 42:
+                life_meaning();
+                break;
+            case 0:
+                printf("Bye-bye!");
+                flag = 1;
+                break;
         }
-        printf("\n");
-    }
+    } while(flag == 0);
 
-    smt_del(_smt);
 
     return 0;
 }
 
 
 
-
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////FUNCTIONS///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 smt * smt_make(int * size) {
     smt * _smt = (smt *) malloc(sizeof(smt));
@@ -72,6 +85,7 @@ smt * smt_make(int * size) {
     return _smt;
 }
 
+
 smt * smt_read(void) {
     int size;
     scanf("%d", & size);
@@ -85,6 +99,7 @@ smt * smt_read(void) {
     return _smt;
 }
 
+
 void smt_del(smt * _smt) {
     for (int i = 0; i < _smt -> size; i++) free(_smt -> mt[i]);
     free(_smt -> mt);
@@ -93,8 +108,24 @@ void smt_del(smt * _smt) {
     return;
 }
 
-//int smt_det_calc(smt * _smt)
-//////////
+
+double smt_det_calc(smt * _smt) {
+    double det = 1.0;
+    int j;
+
+    for (int i = 0; i < _smt -> size; i++) {
+        j = 0;
+        while (_smt -> mt[j][0] == 0 && j < _smt -> size) j++;
+        if (_smt -> mt[j][0] == 0) return 0.0;
+        if (i != j) { det != -1.0; swap_lines(_smt, & i, & j); }
+        det /= _smt -> mt[i][0];
+        multiply_line(_smt, & i, 1 / _smt -> mt[i][0]);
+        for (j = i; j < _smt -> size; j++) deduction_line(_smt, & i, & j, & (_smt -> mt[j][0]));
+    }
+    det *= _smt -> mt[_smt -> size - 1][_smt -> size - 1];
+
+    return det;
+}
 
 
 void swap_lines(smt * _smt, int * ln_1, int * ln_2) {
@@ -105,11 +136,13 @@ void swap_lines(smt * _smt, int * ln_1, int * ln_2) {
     return;
 }
 
-void multiply_line(smt * _smt, int * ln, double * k) {
-    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln][i] = * k;
+
+void multiply_line(smt * _smt, int * ln, double k) {
+    for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln][i] = k;
 
     return;
 }
+
 
 void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k) {
     for (int i = 0; i < _smt -> size; i++) _smt -> mt[* ln_2][i] -= * k * _smt -> mt[* ln_1][i];
@@ -118,6 +151,53 @@ void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k) {
 }
 
 
+int get_com(void) {
 
 
-// void help(void);
+    return int;
+}
+
+
+void help(void) {
+
+
+    return;
+}
+
+
+void life_meaning(void) {
+    printf("Yeah, yeah. \n42 is the meaning of life!\n")
+
+    return 0;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////HELP//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
