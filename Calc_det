@@ -197,14 +197,22 @@ int get_com(void) {
                 count++;
     if (count == sizeof(st_end) / sizeof(char)) return 0;
 
-    //while (str[4] != '\n') scanf("%c", str[4]);
     return -1;
 }
 
 
 void help(void) {
-
-
+    printf("Help:\n");
+    printf("help - brings up a list of commands and their description.\n");
+    printf("det - calculates the determinant of a square matrix.\n");
+    printf("After typing the command, enter the matrix size as a single number, next, enter the matrix itself as an n*n number in the format decimal point separated.\n");
+    printf("Example:\n");
+    printf("3\n");
+    printf("0.0 2.1 3.0\n");
+    printf("1.4 4.5 2.0\n");
+    printf("5.9 2.0 4.2\n");
+    printf("end - end program execution\n");
+        
     return;
 }
 
@@ -220,7 +228,9 @@ void life_meaning(void) {
 ////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////HELP//////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
+//Все, мне стало лень писать хелп к функциям....
+//если есть вопросы так спросите плиз, а я спатки
+//кофе кончился
 
 
 
