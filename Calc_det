@@ -7,7 +7,11 @@
 //////////////////////////////////////HEAD//////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct matrich smt;
+typedef struct matrich
+{
+    int size;
+    double ** mt;
+}smt;
 
 
 smt * smt_make(int * size);
@@ -38,10 +42,14 @@ void life_meaning(void);
 
 int main(void) {
     int flag = 0;
+    smt * _stm = NULL;
     do {
         switch (get_com()) {
             case 1:
-                
+                _stm = smt_read();
+                printf("det = %lf\n", smt_det_calc(_stm));
+                smt_del(_stm);
+                _stm = NULL;
                 break;
             case 9:
                 help();
@@ -52,6 +60,9 @@ int main(void) {
             case 0:
                 printf("Bye-bye!");
                 flag = 1;
+                break;
+            case -1:
+                printf("Error. Command not found.\n");
                 break;
         }
     } while(flag == 0);
@@ -152,9 +163,42 @@ void deduction_line(smt * _smt, int * ln_1, int * ln_2, double * k) {
 
 
 int get_com(void) {
+    int count;
+    char str[10];
 
+    char st_det[3] = "det";
+    char st_help[4] = "help";
+    char st_42[2] = "42";
+    char st_end[3] = "end";
 
-    return int;
+    printf(">>");
+    scanf("%s", str);
+
+    count = 0;
+    for (int i = 0; i < sizeof(st_det) / sizeof(char); i++)
+        if (str[i] == st_det[i])
+                count++;
+    if (count == sizeof(st_det) / sizeof(char)) return 1;
+
+    count = 0;
+    for (int i = 0; i < sizeof(st_help) / sizeof(char); i++)
+        if (str[i] == st_help[i])
+                count++;
+    if (count == sizeof(st_help) / sizeof(char)) return 9;
+
+    count = 0;
+    for (int i = 0; i < sizeof(st_42) / sizeof(char); i++)
+        if (str[i] == st_42[i])
+                count++;
+    if (count == sizeof(st_42) / sizeof(char)) return 42;
+
+    count = 0;
+    for (int i = 0; i < sizeof(st_end) / sizeof(char); i++)
+        if (str[i] == st_end[i])
+                count++;
+    if (count == sizeof(st_end) / sizeof(char)) return 0;
+
+    return -1;
 }
 
 
@@ -166,9 +210,9 @@ void help(void) {
 
 
 void life_meaning(void) {
-    printf("Yeah, yeah. \n42 is the meaning of life!\n")
+    printf("Yeah, yeah. \n42 is the meaning of life!\n");
 
-    return 0;
+    return;
 }
 
 
